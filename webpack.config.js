@@ -1,6 +1,8 @@
-var path = require('path')
-var webpack = require('webpack')
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+
+const outputDir = 'dist'
 
 module.exports = {
   entry: {
@@ -10,8 +12,8 @@ module.exports = {
   mode: 'development',
   output: {
     pathinfo: true,
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: './dist/',
+    path: path.resolve(__dirname, outputDir),
+    publicPath: path.resolve('.', outputDir),
     filename: 'bundle.js'
   },
   watch: true,
@@ -37,10 +39,16 @@ module.exports = {
       }
     ]
   },
+  // TODO: Add HtmlWebpackPlugin for generation of index.html
   optimization: {
     splitChunks: {
-      name: 'vendor',
-      chunks: 'all'
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
     }
   }
 }
